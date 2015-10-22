@@ -1,59 +1,73 @@
-/** Merge Sort
- *  Divide and conquer
- *  Time O(nlogn), space O(nlogn)
- */  
-public class MergeSort{
-	public static void main(String[] args){
-		int[] arr1 = new int[]{5,2,4,6,1,3};
-		mergeSort(arr1, 0, arr1.length-1);
-		for(int curr: arr1){
-			System.out.print(curr + " ");
-		}
-	}
-    
-    //merge sort
-    //sort on the whole list, use p=0 and r=list.length-1
-	public static void mergeSort(int[] arr, int p, int r){
-		if(p < r){
-			int q = (int)Math.floor((p+r)/2);
-			//sort two subarrays
-			mergeSort(arr, p, q);
-			mergeSort(arr, q+1, r);
-			//merge sorted array
-			merge(arr, p, q, r);
-		}
-	}
-    
-    //merge two sorted array
-	public static void merge(int[] arr, int p, int q, int r){
-		int len1 = q-p+1;
-		int len2 = r-q;
-		//create two new arrays to store sorted array
-		int[] arr1 = new int[len1+1];
-		int[] arr2 = new int[len2+1];
-		//fill in the new arrays
-		for(int i=0; i<len1; i++){
-			arr1[i] = arr[p+i];
-		}
-		for(int i=0; i<len2; i++){
-			arr2[i] = arr[q+1+i];
-		}
-		//use MAX_VALUE at the last element
-		arr1[len1] = Integer.MAX_VALUE;
-		arr2[len2] = Integer.MAX_VALUE;
+package algorithm.sorting;
 
-		int i = 0;
-		int j = 0;
-		//merge sorted list
-		for(int k=p; k<=r; k++){
-			if(arr1[i] <= arr2[j]){
-				arr[k] = arr1[i];
-				i++;
-			}else{
-				arr[k] = arr2[j];
-				j++;
-			}
-		}
+/**
+ * Merge Sort (Divide and Conquer)
+ *
+ *
+ * Complexity:
+ *   time O(nlogn)
+ *   space O(n)
+ *
+ * Analysis:
+ *  1. Recurrence: T(n) = c1 + 2T(n/2) + c2 * n = divide + subproblems + merge
+ *  2. Shortness: use O(n) extra space
+ */
 
-	}
+public class MergeSort {
+    public static void main(String[] args) {
+        int[] test = new int[]{5, 1, 8, 3, 4, -1, 8, 3};
+        sort(test);
+        for(int n: test) {
+            System.out.print(n + " ");
+        }
+    }
+
+    public static void sort(int[] arr) {
+        if(arr==null || arr.length<=1) {
+            return;
+        }
+        sortInRange(arr, 0, arr.length-1);
+
+    }
+
+    public static void sortInRange(int[] arr, int left, int right) {
+        if(left < right) {
+            int mid = left + (right - left)/2;
+            sortInRange(arr, left, mid);
+            sortInRange(arr, mid+1, right);
+            mergeSortedArray(arr, left, mid, right);
+        }
+    }
+
+    public static void mergeSortedArray(int[] arr, int left, int mid, int right) {
+        //extra space to store two sorted arrays
+        int[] arr1 = new int[(mid-left+1)+1];
+        int[] arr2 = new int[(right-mid)+1];
+
+        //fill in two arrays with sorted array
+        for(int i=0; i<arr1.length-1; i++) {
+            arr1[i] = arr[left + i];
+        }
+
+        for(int i=0; i<arr2.length-1; i++) {
+            arr2[i] = arr[mid+1+i];
+        }
+
+        //put MAX_VALUE as flag to stop exploring the array
+        arr1[arr1.length-1] = Integer.MAX_VALUE;
+        arr2[arr2.length-1] = Integer.MAX_VALUE;
+
+        //merge two sorted array using two pointers
+        int iter1 = 0;
+        int iter2 = 0;
+        for(int i=left; i<=right; i++) {
+            if(arr1[iter1] < arr2[iter2]) {
+                arr[i] = arr1[iter1];
+                iter1 ++;
+            }else {
+                arr[i] = arr2[iter2];
+                iter2 ++;
+            }
+        }
+    }
 }

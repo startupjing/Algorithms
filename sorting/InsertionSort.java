@@ -1,30 +1,52 @@
-/** Insertion Sort
- *  Efficient for sorting small number of elements
- *  Time O(n^2), sort in place
- */  
-public class InsertionSort{
-	public static void main(String[] args){
-		int[] arr1 = new int[]{5,2,4,6,1,3};
-		insertionSort(arr1);
-		for(int curr: arr1){
-			System.out.print(curr + " ");
-		}
+/**
+ * Insertion Sort:
+ *   for i = 1,2, ..., n
+ *      insert A[i] into sorted array A[0:i-1] by pairwise swaps
+ *      down to the correct position
+ *   end
+ *
+ * Complexity
+ *   time O(n^2)
+ *
+ * Analysis:
+ *   1. O(n) steps, and each step takes O(n) time to swap
+ *   2. comparison cost vs. swap cost (normally the same)
+ *
+ * Improvement:
+ *   Binary Insertion Sort:
+ *       If comparison cost is large, we need to avoid pairwise comparison by replacing it by binary search
+ *   and turn the algorithm into O(nlogn) for comparison but still O(n^2) for swaps
+ *
+ */
 
-	}
+public class InsertionSort {
+    public static void main(String[] args) {
+        int[] test = new int[]{5, 1, 8, 3, 4, -1, 8, 3};
+        sort(test);
+        for(int n: test) {
+            System.out.print(n + " ");
+        }
+    }
 
-	public static void insertionSort(int[] arr){
-		int len = arr.length;
-		int key, i;
-		for(int j=1; j<len; j++){
-			key = arr[j];
-			i = j - 1;
-			//insert into sorted left subarray
-			while(i>=0 && arr[i] > key){
-				arr[i+1] = arr[i];
-				i--;
-			}
-			arr[i+1] = key;
-		}
+    public static void sort(int[] arr) {
+        if(arr==null || arr.length<=1) {
+            return;
+        }
 
-	}
+        for(int i=1; i<arr.length; i++) {
+            int key = arr[i];
+            int insertIdx = i - 1;
+
+            //find index to insert key
+            while(insertIdx>=0 && arr[insertIdx]>key) {
+                arr[insertIdx+1] = arr[insertIdx];    //shift elements to right
+                insertIdx --;
+            }
+
+            //insert key
+            arr[insertIdx+1] = key;
+
+        }
+    }
+
 }
